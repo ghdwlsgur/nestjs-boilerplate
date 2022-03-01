@@ -6,7 +6,10 @@ Controller란 ?
 Handler란 ?
 핸들러는 @Get, @Post, @Delete 등과 같은 데코레이터로 장식된 컨트롤러 클래스 내의 단순한 메서드입니다.
 
+```bash
 nest g controller boards
+```
+
 nest: using nestcli
 g: generate
 controller: controller schematic
@@ -25,7 +28,10 @@ Service란 ?
 Service 안에서는 데이터베이스 관련된 로직을 처리합니다. 다시 말해, 데이터베이스에서 데이터를 가져오거나
 데이터베이스안에 게시판을 생성할 때 생성한 게시판에 정보를 넣어주는 등의 로직을 처리합니다.
 
+```bash
 nest g service boards --no-spec
+```
+
 nest: using nestcli
 g: generate
 service: service schematic
@@ -39,13 +45,16 @@ CLI를 이용해서 Service를 생성하면 boards.service.ts 파일이 생성�
 Board Service를 Board Controller에서 사용할 수 있게 해주기 위해서 Dependency Injection 설정을 합니다.
 NestJS에서 Dependency Injection은 클래스의 Constructor안에서 이루어집니다.
 
+```typescript
 @Controller('boards')
 export class BoardsController {
-boardsService: BoardsService;
-constructor(boardsService: BoardsService) {
-this.boardsService = boardsService;
+  boardsService: BoardsService;
+
+  constructor(boardsService: BoardsService) {
+    this.boardsService = boardsService;
+  }
 }
-}
+```
 
 1. boardsService 파라미터에 BoardsService 객체를 타입으로 지정해줍니다.
 2. 이 boardsService 파라미터를 BoardsController 클래스 안에서 사용하기 위해서
@@ -54,10 +63,12 @@ this.boardsService = boardsService;
    BoardsService로 선언해줍니다.
 4. 이렇게 갖게된 boardsService 프로퍼티를 이용해서 BoardsController 클래스안에서 활용할 수 있습니다.
 
+```typescript
 @Controller('boards')
 export class BoardsController {
-constructor(private boardsService: BoardsService)
+  constructor(private boardsService: BoardsService);
 }
+```
 
 접근 제한자를 이용해서 소스 간단하게 하기
 접근제한자(public, protected, private)을 생성자(contructor) 파라미터에 선언하면 접근 제한자가
@@ -86,3 +97,81 @@ DTO(Data Transfer Object)를 쓰는 이유는 무엇인가요 ?
 - 더 안정적인 코드를 만들어 줍니다. 타입스크립트의 타입으로도 사용됩니다.
 
 클래스는 인터페이스와 다르게 런타임에서 작동하기 때문에 파이프 같은 기능을 이용할 때 더 유용합니다. 그래서 클래스를 사용해서 DTO를 작성합니다.
+
+Pipe란 무엇인가요 ?
+파이프는 @Injectable() 데코레이터로 주석이 달린 클래스입니다.
+파이프는 data transformation과 data validation을 위해서 사용됩니다.
+파이프는 컨트롤러 경로 처리기에 의해 처리되는 인수에 대해 작동합니다.
+Nest는 메소드가 호출되기 직전에 파이프를 삽입하고 파이프는 메소드로 향하는 인수를 수신하고 이에 대해 작동합니다.
+
+Data Transformation이란 ?
+입력 데이터를 원하는 형식으로 변환 (예: 문자열에서 정수로)
+만약 숫자를 받길 원하는데 문자열 형식으로 온다면 파이프에서 자동으로 숫자로 바꿔줍니다.
+
+Data validation이란 ?
+입력 데이터를 평가하고 유효한 경우 변경되지 않은 상태로 전달하면 됩니다. 그렇지 않으면 데이터가 올바르지 않을 때 예외를 발생시킵니다. 만약 이름의 길이가 10자 이하여야 하는데 10자 이상이 되면 에러를 발생시킵니다.
+
+파이프는 위 두가지 모든 경우에서 라우트 핸들러가 처리하는 인수에 대해서 작동합니다. 그리고 파이프는 메소드 를 바로 직전에 작동해서 메소드로 향하는 인수에 대해서 변환할 것이 있으면 변환하고 유효성 체크를 위해서도 호출됩니다.
+
+PIPE 사용하는 법 (Binding Pipes)
+파이프를 사용하는 방법(Binding Pipes)은 세가지로 나눠질 수 있습니다. Handler-level Pipes, Parameter-level Pipes, Global-level Pipes 입니다. 이름에서 말하는 것 그대로 핸들러 레벨, 파라미터 레벨, 글로벌 레벨로 파이프를 사용할 수 있습니다.
+
+## Handler-level
+
+```typescript
+@Post()
+@UsePipes(pipe)
+createBoard(
+   @Board('title') title: string
+   @Board('description') description: string
+) {
+
+}
+```
+
+## Parameter-level
+
+```typescript
+@Post()
+createBoard(
+   @Body('title', ParameterPipe) title: string,
+   @Body('description') description: string
+) {
+
+}
+```
+
+## Global Pipes
+
+글로벌 파이프로서 애플리케이션 레벨의 파이프입니다.
+클라이언트에서 들어오는 모든 요청에 적용됩니다.
+가장 상단 영역인 main.ts에 넣어 사용하면 됩니다.
+
+```typescript
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  app.useGlobalPipes(GlobalPipes);
+  await app.listen(3000);
+}
+bootstrap();
+```
+
+## Built-in Pipes
+
+NestJS에 기본적으로 사용할 수 있게 만들어 놓은 6가지의 파이프가 있습니다.
+
+- ValidationPipe
+- ParseIntPipe
+- ParseBoolPipe
+- ParseArrayPipe
+- ParseUUIDPipe
+- DefaultValuePipe
+
+ex)
+
+```typescript
+@Get('id')
+findOne(@Param('id', ParseIntPipe) id: number) {
+   return;
+}
+```
