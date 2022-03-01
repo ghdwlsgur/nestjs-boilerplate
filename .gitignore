@@ -1,6 +1,8 @@
 # compiled output
 /dist
 /node_modules
+/build
+tsconfig.build.json
 
 # Logs
 logs
@@ -10,6 +12,7 @@ pnpm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
+yarn.lock
 
 # OS
 .DS_Store
