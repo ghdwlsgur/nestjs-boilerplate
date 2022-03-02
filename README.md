@@ -211,3 +211,16 @@ TypeORM 특징과 이점
 - 간단한 CLI 명령을 제공합니다.
 - TypeORM은 간단한 코딩으로 ORM 프레임워크를 사용하기 쉽습니다.
 - TypeORM은 다른 모듈과 쉽게 통합됩니다.
+
+왜 Entity를 생성해야 하나요?
+원래 ORM 없이 데이터베이스 테이블을 생성할 때를 먼저 보겠습니다.
+
+```sql
+CREATE TABLE board {
+   id INTEGER AUTO_INCREMENT PRIMARY KEY,
+   title VARCHAR(255) NOT NULL,
+   description VARCHAR(255) NOT NULL
+}
+```
+
+이런 식으로 테이블을 생성해줍니다. 하지만 TypeORM을 사용할 때는 데이터베이스 테이블로 변환되는 Class이기 때문에 위에 방법처럼 하지 않고 클래스를 생성한 후 그 안에 컬럼들을 정의해주면 됩니다.
