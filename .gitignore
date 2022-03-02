@@ -1,8 +1,11 @@
 # compiled output
-/dist
 /node_modules
 /dist
 tsconfig.build.json
+
+# configs
+src/configs/**.ts
+
 
 # Logs
 logs
