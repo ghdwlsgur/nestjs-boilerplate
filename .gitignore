@@ -5,7 +5,7 @@ tsconfig.build.json
 
 # configs
 src/configs/**.ts
-
+src/config
 
 # Logs
 logs
