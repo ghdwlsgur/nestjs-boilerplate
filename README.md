@@ -249,3 +249,12 @@ JWT 구조
 
 각각의 미들웨어가 호출되는(called) 순서
 middleware -> guard -> interceptor(before) -> pipe -> controller -> service -> controller -> interceptor(after) -> filter (if applicable) -> client
+
+애플리케이션을 운영할 때 보면 에러가 날 때가 많이 있습니다. 그럴 때 어디 부분이 문제인지 빠르고 정확하게 파악하기 위해서는 어떠한 곳에서 에러가 어떻게 나고 있는지 보기 위해서 로그를 보느게 중요합니다.
+
+로그의 종류
+Log - 중요한 정보의 범용 로깅
+Warning - 치명적이거나 파괴적이지 않은 처리되지 않은 문제
+Error - 치명적이거나 파괴적인 처리되지 않은 문제
+Debug - 오류 발생시 로직을 디버그하는 데 도움이 되는 유용한 정보입니다. 개발자용
+Verbose - 응용 프로그램의 동작에 대한 통찰력을 제공하는 정보입니다. 운영자용
