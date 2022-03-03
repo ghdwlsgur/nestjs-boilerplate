@@ -228,3 +228,24 @@ CREATE TABLE board {
 Repository란 무엇인가요 ?
 리포지토리는 엔티티 개체와 함께 작동하며 엔티티 찾기, 삽입, 업데이트, 삭제 등을 처리합니다.
 즉, 데이터베이스에 관련된 일은 서비스에서 하는 것이 아닌 Repository에서 하면 됩니다. 이것을 Repository Pattern이라고도 부릅니다.
+
+remove() vs delete()
+
+- remove(): 무조건 존재하는 아이템을 remove 메소드를 이용해서 지워야 합니다. 그렇지 않으면 에러가 발생합니다. (404 Error)
+- delete(): 만약 아이템이 존재하면 지우고 존재하지 않으면 아무런 영향이 없습니다. 이러한 차이 때문에 remove()를 이용하면 하나의 아이템을 지울 때 두번 데이터베이스를 이용해야 하기 때문에 (아이템 유무 + 지우기)
+  데이터베이스에 한 번만 접근해도 되는 delete 메소드를 사용하겠습니다.
+
+JWT 구조
+
+- Header
+  토큰에 대한 메타 데이터를 포함하고 있습니다. (타입, 해싱 알고리즘 SHA256, RSA...)
+
+- Payload
+  유저 정보(issuer), 만료 시간(expiration time), 주제(subject) 등등 ...
+
+- Verify Signature
+  JWT의 마지막 세그먼트는 토큰을 보낸 사람에 의해 서명되었으며 어떤 식으로든 변경되지 않았는지
+  확인하는 데 사용되는 서명입니다. 서명은 헤더 및 페이로드 세그먼트, 서명 알고리즘, 비밀 또는 공개 키를 사용하여 생성됩니다.
+
+각각의 미들웨어가 호출되는(called) 순서
+middleware -> guard -> interceptor(before) -> pipe -> controller -> service -> controller -> interceptor(after) -> filter (if applicable) -> client
